@@ -1,0 +1,15 @@
+-- Q : How to extract first name from contact name
+
+-- Well, here is your problem...
+-- CustommerName = Alejandra camino  -> Alejandras
+-- Google Search '' Hoe to extract first name from combined name tsql stack overflow''
+-- https://stackoverflow.com/questions/5145791/extracting-first-name-and-last-name
+
+WITH s1 --- Use a common table expression and compare fist_name to first_name2
+     AS (SELECT t.ContactName,
+    LEFT(t.ContactName, CHARINDEX(' ', t.ContactName + ' ') - 1) AS First_Name
+    ,dbo.udf_parse_first_name(t.contactName) AS first_name2
+FROM [EC_IT143_DA].[dbo].[t_w3_schools_customers] AS t)
+ SELECT s1.*
+ FROM s1
+ WHERE s1.First_Name <> s1.first_name2; ---Expected result is 0 rows
